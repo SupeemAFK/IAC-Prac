@@ -15,12 +15,13 @@ resource "docker_image" "nginx" {
 }
 
 resource "docker_container" "nginx" {
-  image = docker_image.nginx.image_id
-  name  = "my-first-server"
-  ports {
-    internal = 80
-    external = 8000
-  }
+    count = 3
+    image = docker_image.nginx.image_id
+    name  = "my-server-${count.index}"
+    ports {
+        internal = 80
+        external = 8000 + count.index
+    }
 }
 
 resource "null_resource" "run_ansible" {
