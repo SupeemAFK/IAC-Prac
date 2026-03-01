@@ -1,0 +1,25 @@
+# Local .terraform folder (contains providers and modules)
+.terraform/
+
+# State files (Highly sensitive! Use a remote backend instead)
+*.tfstate
+*.tfstate.*
+
+# Crash logs
+crash.log
+crash.log.*
+
+# Ignore any .tfvars files with sensitive data
+# It's better to use environment variables or a secret manager
+*.tfvars
+*.tfvars.json
+
+# Ignore override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
