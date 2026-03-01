@@ -22,3 +22,13 @@ resource "docker_container" "nginx" {
     external = 8000
   }
 }
+
+resource "null_resource" "run_ansible" {
+  # Wait for the container to exist before trying to run Ansible!
+  depends_on = [docker_container.nginx]
+
+  provisioner "local-exec" {
+    # This is the exact command you were typing manually
+    command = "ansible-playbook -i inventory.ini playbook.yml"
+  }
+}

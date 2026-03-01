@@ -4,6 +4,9 @@
   gather_facts: false
 
   tasks:
+    - name: Install Python first
+      raw: apt-get update && apt-get install -y python3
+
     - name: Create a custom index.html
       copy:
         dest: /usr/share/nginx/html/index.html
