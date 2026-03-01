@@ -1,0 +1,12 @@
+---
+- name: Customize our Nginx Web Page
+  hosts: webservers
+  gather_facts: false
+
+  tasks:
+    - name: Create a custom index.html
+      copy:
+        dest: /usr/share/nginx/html/index.html
+        content: |
+          <h1>Wow! Ansible actually works!</h1>
+          <p>Terraform built the server, and Ansible customized it.</p>
