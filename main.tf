@@ -15,7 +15,7 @@ resource "docker_image" "nginx" {
 }
 
 resource "docker_container" "nginx" {
-    count = 3
+    count = 5
     image = docker_image.nginx.image_id
     name  = "my-server-${count.index}"
     ports {
@@ -24,12 +24,29 @@ resource "docker_container" "nginx" {
     }
 }
 
+resource "local_file" "create_ansible_inventory" {
+  
+  # This creates a multi-line string and loops through our containers
+  content = <<-EOT
+  [webservers]
+  %{ for container in docker_container.nginx ~}
+  ${container.name} ansible_connection=docker
+  %{ endfor ~}
+  EOT
+  
+  # This tells Terraform what to name the file it creates
+  filename = "${path.module}/inventory.ini"
+}
+
 resource "null_resource" "run_ansible" {
-  # Wait for the container to exist before trying to run Ansible!
-  depends_on = [docker_container.nginx]
+  
+  # Now it waits for the containers AND the inventory file!
+  depends_on = [
+    docker_container.nginx, 
+    local_file.create_ansible_inventory
+  ]
 
   provisioner "local-exec" {
-    # This is the exact command you were typing manually
     command = "ansible-playbook -i inventory.ini playbook.yml"
   }
 }
